@@ -1,0 +1,73 @@
+<rules>
+  <metadata>
+    <description>
+      Strict rules for generating Angular + PrimeNG code from Figma nodes. 
+      Follow these instructions ABSOLUTELY.
+    </description>
+  </metadata>
+
+  <rule id="tech_stack">
+    <instruction>
+      - **Framework**: Angular 17+ (Standalone Components required).
+      - **UI Library**: PrimeNG 17+ (use `primeng/*` imports).
+      - **Styling**: PrimeFlex (if applicable) or strict SCSS/CSS modules.
+      - **State**: Angular Signals (`signal()`, `computed()`, `effect()`).
+      - **DI**: Use `inject()` function, NOT constructor injection.
+    </instruction>
+  </rule>
+
+  <rule id="component_structure">
+    <instruction>
+      - Each component must have `standalone: true`.
+      - `selector` must be prefixed with `app-`.
+      - `template` and `styles` should be separate files unless trivial (< 10 lines).
+      - All imports must be explicit. Do NOT import `CommonModule` if not needed.
+    </instruction>
+  </rule>
+
+  <rule id="element_mapping">
+    <instruction>
+      Analyze the Figma node type and name to determine the correct PrimeNG component.
+
+      **Mappings:**
+      - **FRAME / RECTANGLE (Background)**:
+        - If it has a shadow/border and contains content -> `<p-card>` or `<p-panel>`.
+        - If it is a modal/dialog -> `<p-dialog>`.
+        - Else -> `<div>` or `<section>`.
+
+      - **TEXT**:
+        - If style is Heading -> `<h1>`...`<h6>`.
+        - If style is Label -> `<label>` or `<span class="font-bold">`.
+        - Else -> `<p>` or `<span>`.
+
+      - **INSTANCE (Button)**:
+        - Must become `<p-button>`.
+        - Extract label from text child.
+        - Extract icon from instance children.
+        - Map background color to `severity` (primary, secondary, danger, etc.).
+
+      - **INSTANCE (Input)**:
+        - Must become `<input pInputText>`.
+        - If it has a label -> wrap in `<div class="flex flex-column gap-2">`.
+
+      - **INSTANCE (Table)**:
+        - Must become `<p-table>`.
+    </instruction>
+  </rule>
+
+  <rule id="layout_rules">
+    <instruction>
+      - **AutoLayout (Horizontal)**: Use `display: flex; flex-direction: row; gap: Xpx;`.
+      - **AutoLayout (Vertical)**: Use `display: flex; flex-direction: column; gap: Xpx;`.
+      - **Alignment**: Map `primaryAxisAlignItems` and `counterAxisAlignItems` to standard CSS flex properties (`justify-content`, `align-items`).
+      - **Padding**: Convert absolute padding to REM (assume 16px = 1rem).
+    </instruction>
+  </rule>
+
+  <rule id="variable_extraction">
+    <instruction>
+      - Do not hardcode hex colors. Use CSS variables if they look like theme colors.
+      - Do not hardcode large text blocks.
+    </instruction>
+  </rule>
+</rules>
